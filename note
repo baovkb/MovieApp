@@ -1,0 +1,44 @@
+Lưu ý về các widget:
+Container:
+- Nếu không có child thì nó sẽ chiếm toàn bộ kích thước có sẵn của cha
+- Nếu có child thì kích thước của nó xác định bằng phần tử con có KÍCH THƯỚC CỐ ĐỊNH
+
+vd:
+return Container(
+      color: Colors.blue,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('test', style: TextStyle(color: Colors.red),),
+         Container(
+           color: Colors.redAccent,
+         )
+        ]
+      ),
+    );
+Container đầu tiên có child là Column, mà Column là widget có kích thước
+    + nếu MainAxisSize.max thì kích thước của nó là không gian có sẵn của cha => Container ngoài
+    cùng chiếm toàn bộ màn hình do con là phần tử không có kích thước cố định
+    + nếu MainAxisSize.min thì kích thước của nó xác định bằng phần tử con có kích thước cố định,
+    trường hợp này chỉ có Text là kích thước cố định, Container trong cùng không có child dẫn đến không
+    có kích thước cố định => kích thức container trong cùng phụ thuộc vào direct parent là column
+    mà column lại dựa vào children có kích thước, do đó Container trong cùng không có kích thước (tức
+    là không hiển thị lên màn hình), Column có kích thước dựa vào text, Container ngoài cùng có kích
+    thước là của column, do đó tổng kích thước hiển thị trên màn hình chỉ là kích thước text
+
+
+Ex2:
+return Column(
+      children: [
+        Column(
+          children: [
+            Expanded(child: Container(color: Colors.red,))
+          ],
+        )
+      ],
+    );
+
+kích thước Column ngoài cùng phụ thuộc vào children có kích thước cụ thể của nó, là Column thứ 2,
+Column thứ 2 lại phụ thuộc vào Expanded, mà thẻ Expanded phục thuộc vào kích thước direct parent của
+nó, chính là Column thứ 2, do đó Expanded không có kích thước cụ thể => direct parent Column thứ 2
+không có kích thước => Column đầu tiên không có kích thước => tổng kích thước hiển thị là 0
