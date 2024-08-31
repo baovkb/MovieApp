@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/core/utils/colors.dart';
+import 'package:movie_app/features/account/presentation/page/profile_screen/profile_screen.dart';
+import 'package:movie_app/features/movie/presentation/pages/favorite/favorite_screen.dart';
 import 'package:movie_app/features/movie/presentation/pages/home_screen/home_screen.dart';
-import 'package:movie_app/features/movie/presentation/pages/profile_screen/profile_screen.dart';
 import 'package:movie_app/features/movie/presentation/widgets/navigation_bar.dart';
 
 class MainScreen extends StatefulWidget {
@@ -15,7 +16,8 @@ class _MainScreenState extends State<MainScreen> {
   int _current_page = 0;
   final navPageList = <Widget>[
     HomeScreen(),
-    ProfileScreen()
+    FavoriteScreen(),
+    ProfileScreen(),
   ];
 
   @override
@@ -37,10 +39,13 @@ class _MainScreenState extends State<MainScreen> {
               navItemList: [
                 CustomNavigationBarItem(
                     icon: Icons.home,
-                    label: Text('test1', style: TextStyle(color: Colors.white),)),
+                    label: const Text('Home', style: TextStyle(color: Colors.white),)),
+                CustomNavigationBarItem(
+                    icon: Icons.favorite,
+                    label: const Text('Favorite', style: TextStyle(color: Colors.white),)),
                 CustomNavigationBarItem(
                     icon: Icons.account_box,
-                    label: Text('test2', style: TextStyle(color: Colors.white)))
+                    label: Text('Profile', style: TextStyle(color: Colors.white))),
               ])
         ],
       ),

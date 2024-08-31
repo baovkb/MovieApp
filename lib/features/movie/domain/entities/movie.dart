@@ -1,6 +1,6 @@
 class Movie {
   bool adult;
-  String backdrop_path;
+  String? backdrop_path;
   List<int> genre_ids;
   int id;
   String original_language;

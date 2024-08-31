@@ -34,6 +34,7 @@ class CustomNavigationBar extends StatelessWidget {
           ),
           child: Row(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: () {
               List<Widget> itemList = [];
@@ -61,7 +62,6 @@ class NavBarItemWidget extends StatelessWidget {
   void Function(int index) onTap;
   CustomNavigationBarItem customNavigationBarItem;
   int position;
-  final Duration _duration = const Duration(milliseconds: 250);
 
   NavBarItemWidget({
     super.key,
@@ -71,46 +71,44 @@ class NavBarItemWidget extends StatelessWidget {
     required this.customNavigationBarItem,
     required this.position});
 
+  final Duration _duration = const Duration(milliseconds: 250);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<NavBarStateNotifier>(
       builder: (context, navState, child) {
-        return Expanded(
-          child: Center(
-            child: GestureDetector(
-                onTap: () {
-                  if (navState.position != position) {
-                    onTap(position);
-                    navState.setPosition(position);
-                  }
-                },
-                child: AnimatedContainer(
-                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    color: navState.position == position ? selectedColor.withOpacity(0.07) : Colors.transparent,
-                  ),
-                  duration: _duration,
-                  curve: Curves.easeInOut,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(customNavigationBarItem.icon,
-                        color: navState.position == position ? selectedColor : unselectedColor,
-                      ),
-                      AnimatedSize(
-                        duration: _duration,
-                        curve: Curves.easeInOut,
-                        child: navState.position == position
-                            ? Container(
-                            margin: const EdgeInsets.only(left: 4),
-                            child: customNavigationBarItem.label)
-                            : const SizedBox(),
-                      )
-                    ],
-                  ),
-                )
-            ),
+        return Center(
+          child: GestureDetector(
+              onTap: () {
+                if (navState.position != position) {
+                  onTap(position);
+                  navState.setPosition(position);
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  color: navState.position == position ? selectedColor.withOpacity(0.07) : Colors.transparent,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(customNavigationBarItem.icon,
+                      color: navState.position == position ? selectedColor : unselectedColor,
+                    ),
+                    AnimatedSize(
+                      duration: _duration,
+                      child: Container(
+                          margin: const EdgeInsets.only(left: 4),
+                          child: navState.position == position
+                              ? customNavigationBarItem.label
+                              : const SizedBox()),
+                    )
+                  ],
+                ),
+              )
           ),
         );
       },

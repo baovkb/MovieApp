@@ -18,6 +18,11 @@ dependencies:
   equatable: ^2.0.0
   dartz: ^0.10.1
   custom_rating_bar: ^3.0.0
+  youtube_player_flutter: ^8.1.0
+  sqflite: any
+  path: any
+  webview_flutter: ^4.9.0
+
 
 dev_dependencies:
   flutter_test:

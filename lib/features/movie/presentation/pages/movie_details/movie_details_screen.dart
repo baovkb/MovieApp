@@ -1,15 +1,20 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:movie_app/features/movie/data/repositories/movies_repository_impl.dart';
+import 'package:movie_app/features/movie/data/repositories/videos_list_repository_impl.dart';
 import 'package:movie_app/features/movie/domain/entities/movie_list.dart';
 import 'package:movie_app/features/movie/domain/usecases/similar_movie_use_case.dart';
+import 'package:movie_app/features/movie/domain/usecases/videos_use_case.dart';
 import 'package:movie_app/features/movie/presentation/pages/movie_details/widget/cast_list_widget.dart';
 import 'package:movie_app/features/movie/presentation/stream_controller/genre/fetch_movie_genre_state.dart';
 import 'package:movie_app/features/movie/presentation/stream_controller/movie_details/fetch_similar_movie_state.dart';
 import 'package:movie_app/features/movie/presentation/stream_controller/movie_details/fetch_similar_movies_controller.dart';
+import 'package:movie_app/features/movie/presentation/stream_controller/video/fetch_videos_list_controller.dart';
+import 'package:movie_app/features/movie/presentation/stream_controller/video/fetch_videos_list_state.dart';
 import 'package:movie_app/features/movie/presentation/widgets/genre_label_widget.dart';
 import 'package:movie_app/features/movie/presentation/widgets/movie_widget.dart';
 import 'package:movie_app/route/route_name.dart';
@@ -41,6 +46,12 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     SimilarMovieUseCase(
         MoviesListRepositoryImpl(client: movieApiClient))
   );
+
+  late final fetchVideoController = FetchVideosListController(
+      VideosUseCase(
+          VideosListRepositoryImpl(movieApiClient)));
+
+  StreamSubscription<FetchVideoListState>? subscription;
 
   @override
   void initState() {
@@ -120,15 +131,18 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                 ),
               ),
               Align(
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: CustomColor.secondColor
+                child: GestureDetector(
+                  onTap: () => _handlePlayVideoBtn(context, movie.id),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: CustomColor.secondColor
+                    ),
+                    child: const Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
+                      size: 40,),
                   ),
-                  child: Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                    size: 40,),
                 ),
               ),
               Positioned(
@@ -312,6 +326,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
   void dispose() {
     movieDetailsController.dispose();
     similarMoviesController.dispose();
+    fetchVideoController.dispose();
+    subscription?.cancel();
     super.dispose();
   }
 
@@ -325,13 +341,38 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   itemBuilder: (context, position) => MovieWidget(
                     movie: movieList.results[position],
                     onTap: (id) {
-                      Navigator.popAndPushNamed(context, RouteName.MOVIE_DETAILS,
+                      Navigator.pushReplacementNamed(context, RouteName.MOVIE_DETAILS,
                       arguments: <String, int> {
                         'movie_id': id
                       });
                     },)
         )
     );
+  }
+
+  void _handlePlayVideoBtn(BuildContext context, final int movie_id) {
+    fetchVideoController.fetchVideosList(movie_id);
+
+    String video_id = '';
+    subscription = fetchVideoController.stream.listen((state) {
+      if (state is FetchVideosListLoaded) {
+        for (final video in state.videosList.results) {
+          if (video.site.compareTo('YouTube') == 0
+              && video.type.compareTo('Teaser') == 0) {
+            video_id = video.key;
+            break;
+          }
+        }
+
+        Navigator.pushNamed(
+            context,
+            RouteName.PLAY_VIDEO,
+            arguments: <String, String> {
+              'video_id': video_id
+            });
+      }
+    });
+
   }
 }
 

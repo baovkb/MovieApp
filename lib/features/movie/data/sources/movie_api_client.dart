@@ -6,6 +6,7 @@ import 'package:movie_app/features/movie/data/models/casts_list_model.dart';
 import 'package:movie_app/features/movie/data/models/genre_model.dart';
 import 'package:movie_app/features/movie/data/models/movie_details_model.dart';
 import 'package:movie_app/features/movie/data/models/movie_list_model.dart';
+import 'package:movie_app/features/movie/data/models/videos_list_model.dart';
 import 'package:movie_app/features/movie/domain/entities/movie_details.dart';
 
 class MovieApiClient {
@@ -48,8 +49,13 @@ class MovieApiClient {
   }
   
   Future<MovieListModel> fetchSimilarMovies(int id) async {
-    final response = await client.get(Uri.parse(BASE_URL).resolve('movie/$id/recommendations?api_key=$apiKey'));
+    final response = await client.get(Uri.parse(BASE_URL).resolve('movie/$id/similar?api_key=$apiKey'));
     return MovieListModel.fromJson(_handleResponse(response));
+  }
+
+  Future<VideosListModel> fetchVideosList(int id) async {
+    final response = await client.get(Uri.parse(BASE_URL).resolve('movie/$id/videos?api_key=$apiKey'));
+    return VideosListModel.fromJson(_handleResponse(response));
   }
 
    Map<String, dynamic> _handleResponse(final http.Response response) {
