@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/core/utils/colors.dart';
+import 'package:movie_app/features/account/presentation/page/favorite/favorite_screen.dart';
 import 'package:movie_app/features/account/presentation/page/profile_screen/profile_screen.dart';
-import 'package:movie_app/features/movie/presentation/pages/favorite/favorite_screen.dart';
 import 'package:movie_app/features/movie/presentation/pages/home_screen/home_screen.dart';
 import 'package:movie_app/features/movie/presentation/widgets/navigation_bar.dart';
 

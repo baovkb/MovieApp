@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
+import 'package:movie_app/core/utils/colors.dart';
 import 'package:movie_app/features/account/data/repositories/account_repository_impl.dart';
-import 'package:movie_app/features/account/data/sources/local_data/session_db.dart';
+import 'package:movie_app/features/account/data/sources/local_data/account_db.dart';
 import 'package:movie_app/features/account/data/sources/remote_data/account_api_client.dart';
+import 'package:movie_app/features/account/domain/entities/account.dart';
 import 'package:movie_app/features/account/domain/usecases/create_session_use_case.dart';
 import 'package:movie_app/features/account/domain/usecases/request_token_use_case.dart';
 import 'package:movie_app/features/account/presentation/bloc/account/create_session_bloc.dart';
@@ -36,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     context.read<GetAccountBloc>().add(GetAccountEvent());
 
-    accountRepoImpl = AccountRepositoryImpl(AccountApiClient(Client()), SessionDB());
+    accountRepoImpl = AccountRepositoryImpl(AccountApiClient(Client()), AccountDB());
 
     requestTokenBloc = RequestTokenBloc(
         RequestTokenUseCase(accountRepoImpl));
@@ -64,8 +66,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CircularProgressIndicator(color: Colors.white,),);
             }
             else if (getAccountState is GetAccountLoaded) {
-              return const Center(
-                child: Text('account loaded', style: TextStyle(color: Colors.white),),
+              Account account = getAccountState.account;
+              final String avatarPath = 'https://image.tmdb.org/t/p/w400${account.avatar['tmdb']['avatar_path']}';
+
+              return Stack(
+                children: [
+                  Column(
+                    children: [
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 24),
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: NetworkImage(avatarPath)),
+                              border: Border.all(
+                                  width: 2,
+                                  color: CustomColor.mainLightColor
+                              )
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 16),
+                        child: Text(
+                          account.name.isEmpty ? '(No name)' : account.name,
+                          style: TextStyle(color: CustomColor.textColor,
+                              fontSize: 18),),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 16),
+                        child: RichText(text: TextSpan(
+                            children: [
+                              TextSpan(text: 'Username: ', style: TextStyle(color: CustomColor.textColor,
+                                  fontSize: 18)),
+                              TextSpan(text: account.username, style: TextStyle(color: CustomColor.textColor,
+                                  fontSize: 18))
+                            ]
+                        )),
+                      )
+                    ],
+                  ),
+                  const Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Icon(Icons.settings, color: Colors.white,),
+                  )
+                ] 
               );
             }
             return SizedBox();

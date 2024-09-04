@@ -1,6 +1,6 @@
 //using singleton pattern to ensure only one instance
 
-import 'package:movie_app/features/account/data/sources/local_data/session_db.dart';
+import 'package:movie_app/features/account/data/sources/local_data/account_db.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -35,8 +35,9 @@ class DatabaseHelper {
 
   Future<void> _onCreate (Database db, int version) async {
     return await db.execute('''
-          CREATE TABLE ${SessionDB.tableName} (
+          CREATE TABLE ${AccountDB.tableName} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            account_id INTEGER,
             session TEXT NOT NULL
           )
         ''');

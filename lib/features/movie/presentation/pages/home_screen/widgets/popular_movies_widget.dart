@@ -67,65 +67,6 @@ class PopularMoviesWidget extends StatelessWidget {
               },
             )
 
-          // StreamBuilder(
-          //   initialData: FetchPopularMoviesInitial(),
-          //   stream: movieController.movieStream,
-          //   builder: (context, snapshot) {
-          //     if (snapshot.hasData) {
-          //       debugPrint(snapshot.data.toString());
-          //
-          //       final movieState = snapshot.data;
-          //
-          //         if (movieState is FetchPopularMoviesInitial) {
-          //         return const Center(child:
-          //           Text('Please wait...',
-          //             style: TextStyle(color: Colors.white),),);
-          //       } else if (movieState is FetchPopularMoviesLoading) {
-          //         return const Center(child: CircularProgressIndicator(
-          //           color: Colors.white,
-          //         ));
-          //       } else if (movieState is FetchPopularMoviesLoaded) {
-          //         return ListView.builder(
-          //             itemCount: movieState.movieList.results.length,
-          //             itemBuilder: (context, position) {
-          //               final movieList = movieState.movieList.results;
-          //               return movieItem(movieList[position]);
-          //             });
-          //       } else if (movieState is FetchPopularMoviesError) {
-          //         return Center(child: Text('Something happend'),);
-          //       } else {
-          //         return Center(child: Text('Unknow error'),);
-          //       }
-          //     } else {
-          //       return Center(child: Text('hmmm....'),);
-          //     }
-          //   })
-
-          // BlocBuilder<MovieBloc, MovieState>(
-          //     builder: (context, state) {
-          //       if (state is FetchPopularMoviesInitial) {
-          //         return const Center(child:
-          //           Text('Please wait...',
-          //             style: TextStyle(color: Colors.white),),);
-          //       } else if (state is FetchPopularMoviesLoading) {
-          //         return const Center(child: CircularProgressIndicator(
-          //           color: Colors.white,
-          //         ));
-          //       } else if (state is FetchPopularMoviesLoaded) {
-          //         return ListView.builder(
-          //             itemCount: state.moviesPopular.results.length,
-          //             itemBuilder: (context, position) {
-          //               final movieList = state.moviesPopular.results;
-          //               return movieItem(movieList[position]);
-          //             });
-          //       } else if (state is FetchPopularMoviesError) {
-          //         return Center(child: Text('Something happend'),);
-          //       } else {
-          //         return Center(child: Text('Unknow error'),);
-          //       }
-          //     }
-          // ),
-
         )
       ],
     );

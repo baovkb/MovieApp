@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/features/account/presentation/page/favorite/favorite_screen.dart';
 import 'package:movie_app/features/account/presentation/page/profile_screen/profile_screen.dart';
-import 'package:movie_app/features/movie/presentation/pages/favorite/favorite_screen.dart';
 import 'package:movie_app/main_screen.dart';
 import 'package:movie_app/features/movie/presentation/pages/movie_details/movie_details_screen.dart';
 import 'package:movie_app/features/movie/presentation/pages/play_video/play_video_screen.dart';

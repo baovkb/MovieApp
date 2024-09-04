@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:movie_app/core/usecases/usecase.dart';
 import 'package:movie_app/features/account/data/repositories/account_repository_impl.dart';
 import 'package:movie_app/features/account/data/sources/local_data/database.dart';
-import 'package:movie_app/features/account/data/sources/local_data/session_db.dart';
+import 'package:movie_app/features/account/data/sources/local_data/account_db.dart';
 import 'package:movie_app/features/account/data/sources/remote_data/account_api_client.dart';
 import 'package:movie_app/features/account/domain/usecases/get_account_use_case.dart';
 import 'package:movie_app/features/account/presentation/bloc/account/get_account_bloc.dart';
@@ -54,15 +54,13 @@ void main() {
   test('test request token', () async {
     // final Tokenresult = await apiClient.createRequestToken();
     // print('token: $Tokenresult');
-
-    SessionDB sessionDB = SessionDB();
-    String? session = await sessionDB.getSession();
-    debugPrint('session: $session');
-    await sessionDB.insertSession('test session');
-    session = await sessionDB.getSession();
-    debugPrint('session: $session');
     // GetAccountUseCase useCase = GetAccountUseCase(AccountRepositoryImpl(apiClient, sessionDB));
     // final result = await useCase.call(NoParam());
     // if (result.isLeft()) print((result as Left).value.runtimeType);
+  });
+  
+  test('test add favorite movie', () async {
+    final result = await accountApiClient.addFavoriteMovie(21460539, 'b93032188ec3132255e92a1247116f57e4a0a4c4', 533537);
+    print(result);
   });
 }

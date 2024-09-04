@@ -3,9 +3,15 @@ import 'dart:ui';
 
 import 'package:custom_rating_bar/custom_rating_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
+import 'package:movie_app/features/account/presentation/bloc/favorite_movies/add_favorite_movie_bloc.dart';
+import 'package:movie_app/features/account/presentation/bloc/favorite_movies/get_favorite_movies_bloc.dart';
+import 'package:movie_app/features/account/presentation/bloc/favorite_movies/favorite_movies_event.dart';
+import 'package:movie_app/features/account/presentation/bloc/favorite_movies/favorite_movies_state.dart';
 import 'package:movie_app/features/movie/data/repositories/movies_repository_impl.dart';
 import 'package:movie_app/features/movie/data/repositories/videos_list_repository_impl.dart';
+import 'package:movie_app/features/movie/domain/entities/movie.dart';
 import 'package:movie_app/features/movie/domain/entities/movie_list.dart';
 import 'package:movie_app/features/movie/domain/usecases/similar_movie_use_case.dart';
 import 'package:movie_app/features/movie/domain/usecases/videos_use_case.dart';
@@ -155,7 +161,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                       size: 30,
                       color: Colors.white,
                     ),
-                  ))
+                  )),
+              PopupMenu(),
             ],
           ),
         ),
@@ -373,6 +380,78 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
       }
     });
 
+  }
+
+  Widget PopupMenu() {
+    bool isExist = false;
+
+    return BlocListener<AddFavoriteMovieBloc, AddFavoriteMovieState>(
+        listener: (BuildContext context, state) {
+          if (state is AddFavoriteMovieLoaded) {
+            if (state.success) {
+              debugPrint('add favorite success');
+              context.read<GetFavoriteMoviesBloc>().add(GetFavoriteMoviesEvent());
+            }
+          }
+        },
+      child: Positioned(
+        top: 10,
+        right: 10,
+        child: PopupMenuButton(
+          icon: Icon(Icons.more_vert, color: Colors.white,),
+          color: CustomColor.mainColor,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                  onTap: () {
+                    context.read<AddFavoriteMovieBloc>().add(AddFavoriteMovieEvent(
+                        movie_id: widget.movie_id,
+                        favorite: !isExist));
+
+                    // BlocListener<AddFavoriteMovieBloc, AddFavoriteMovieState>(
+                    //   listener: (BuildContext context, state) {
+                    //     if (state is AddFavoriteMovieLoaded) {
+                    //       if (state.success) {
+                    //         debugPrint('add favorite success');
+                    //         context.read<GetFavoriteMoviesBloc>().add(GetFavoriteMoviesEvent());
+                    //       }
+                    //     }
+                    //   },);
+                  },
+                  child: BlocBuilder<GetFavoriteMoviesBloc, GetFavoriteMoviesState>(
+                      builder: (context, state) {
+                        if (state is GetFavoriteMoviesLoaded) {
+                          isExist = false;
+                          List<Movie> movieList = state.movieList.results;
+
+                          for (final movie in movieList) {
+                            if (movie.id == widget.movie_id) {
+                              isExist = true;
+                              break;
+                            }
+                          }
+
+                          if (!isExist) {
+                            return const Row(children: [
+                                Icon(Icons.favorite_border, color: Colors.white,),
+                                Text('Add to favorite', style: TextStyle(color: Colors.white),)
+                              ],
+                            );
+                          } else {
+                            return const Row(children: [
+                              Icon(Icons.favorite, color: Colors.pinkAccent,),
+                              Text('Remove from favorite', style: TextStyle(color: Colors.white),)
+                              ],
+                            );
+                          }
+                        }
+                        else {
+                          return SizedBox();
+                        }
+                      },)
+              ),
+            ])
+      ),
+    );
   }
 }
 
