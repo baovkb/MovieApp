@@ -1,17 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/features/movie/presentation/pages/home_screen/widgets/movie_by_genre_widget.dart';
 import 'package:movie_app/features/movie/presentation/pages/home_screen/widgets/popular_movies_widget.dart';
 
-import '../../../../../core/utils/colors.dart';
-import '../../../domain/entities/movie.dart';
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+  final FocusNode _focus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+  
+  @override
+  void dispose() {
+    _focus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     //use for bloc
     // BlocProvider.of<MovieBloc>(context).add(FetchPopularMovieEvent());
     // context.read<MovieBloc>().add(FetchPopularMovieEvent());
@@ -78,7 +93,16 @@ class HomeScreen extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   height: 50,
                   child: TextField(
+                    textInputAction: TextInputAction.go,
+                    onTapOutside: (pointerDownEvent) {
+                      _focus.unfocus();
+                    },
+                    onSubmitted: (value) {
+                      debugPrint('go value: $value');
+                      //go to search movie page
+                    },
                     textAlignVertical: TextAlignVertical.center,
+                    focusNode: _focus,
                     style: const TextStyle(
                         color: Colors.white
                     ),
@@ -116,23 +140,6 @@ class HomeScreen extends StatelessWidget {
             ]
         ),
       ),
-    );
-  }
-}
-
-class test extends StatelessWidget {
-  const test({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Column(
-          children: [
-            Expanded(child: Container(color: Colors.red,))
-          ],
-        )
-      ],
     );
   }
 }

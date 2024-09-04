@@ -126,6 +126,10 @@ class CustomNavigationBarItem {
 class NavBarStateNotifier extends ChangeNotifier{
   int position = 0;
 
+  NavBarStateNotifier() {
+    debugPrint('NavBarStateNotifier constructor is called');
+  }
+
   void setPosition(int position) {
     this.position = position;
     notifyListeners();
