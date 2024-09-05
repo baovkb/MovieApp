@@ -1,16 +1,30 @@
-# movie_app
+<h1> Movie App - Flutter </h1>
+<h2> About this project</h2>
+<h3> Project overview</h3>
 
-A new Flutter project.
+This application is built on the [TheMovieDB](https://www.themoviedb.org/) platform, providing quick access to information on popular movies and those currently in theaters. It also allows users to save their favorite movies and watch trailers using the APIs provided by TheMovieDB
 
-## Getting Started
+You can try it at [here](movie_android.apk)
 
-This project is a starting point for a Flutter application.
+<h3> Features </h3>
 
-A few resources to get you started if this is your first Flutter project:
+- Support authentication based on API KEY
+- Recommend popular movies
+- Classify movies by genre such as Action, Adventure, Comedy, etc.
+- Provide detailed information about movies such as rating, overview, duration, cast, similar movies, etc.
+- Find movies by keyword
+- Add/Delete movies to/from favorites
+- Find movies in favorites
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<h3> Used tech stack </h3>
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Clean architecture
+- TheMovieDB API
+- Sqlite cache data
+- State Management: Bloc, StreamController, NotifierProvider
+
+<h3> Some screenshots </h3>
+
+![user](Screenshot/img_1.png)
+![user](Screenshot/img_2.png)
+

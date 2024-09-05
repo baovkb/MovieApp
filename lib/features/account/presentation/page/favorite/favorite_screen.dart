@@ -42,10 +42,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     _textEditingController.removeListener(_onTextChanged);
     _textEditingController.dispose();
     searchableMovieNotifier.dispose();
-    if (_debounce!.isActive) {
+    if (_debounce?.isActive ?? false) {
       _debounce?.cancel();
     }
-    debugPrint('dispose favorite screen');
     super.dispose();
   }
 
