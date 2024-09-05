@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/features/movie/presentation/pages/home_screen/widgets/movie_by_genre_widget.dart';
 import 'package:movie_app/features/movie/presentation/pages/home_screen/widgets/popular_movies_widget.dart';
+import 'package:movie_app/route/route_name.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -98,8 +99,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       _focus.unfocus();
                     },
                     onSubmitted: (value) {
-                      debugPrint('go value: $value');
-                      //go to search movie page
+                      Navigator.pushNamed(
+                          context,
+                          RouteName.SEARCH_MOVIES,
+                          arguments: {
+                            'query': value
+                          }
+                      );
                     },
                     textAlignVertical: TextAlignVertical.center,
                     focusNode: _focus,

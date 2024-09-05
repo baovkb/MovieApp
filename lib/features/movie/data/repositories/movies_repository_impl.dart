@@ -22,7 +22,7 @@ class MoviesListRepositoryImpl implements MoviesListRepository {
   }
 
   @override
-  Future<Either<Failure, MovieList>> fetchMoviesByGenre(int genre_id) async {
+  Future<Either<Failure, MovieListModel>> fetchMoviesByGenre(int genre_id) async {
     try {
       final result = await client.fetchMoviesByGenre(genre_id);
       return Right(result);
@@ -32,12 +32,22 @@ class MoviesListRepositoryImpl implements MoviesListRepository {
   }
 
   @override
-  Future<Either<Failure, MovieList>> fetchSimilarMovies(int movie_id) async {
+  Future<Either<Failure, MovieListModel>> fetchSimilarMovies(int movie_id) async {
     try {
       final result = await client.fetchSimilarMovies(movie_id);
       return Right(result);
     } catch (e) {
       return e is Failure ? Left(e) : const Left(UnknownError());
+    }
+  }
+
+  @override
+  Future<Either<Failure, MovieListModel>> searchMovies(String query) async {
+    try {
+      final result = await client.searchMovies(query);
+      return Right(result);
+    } catch (e) {
+      return e is Failure ? Left(e) : Left(UnknownError());
     }
   }
 }

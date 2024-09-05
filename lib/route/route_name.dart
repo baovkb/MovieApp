@@ -5,4 +5,5 @@ class RouteName {
   static const String MOVIE_DETAILS = '/movie_details';
   static const String PLAY_VIDEO = '/play_video';
   static const String FAVORITE_MOVIE = '/favorite_movie';
+  static const String SEARCH_MOVIES = '/search_movies';
 }

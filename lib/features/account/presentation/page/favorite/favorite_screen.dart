@@ -6,6 +6,7 @@ import 'package:movie_app/features/account/presentation/bloc/favorite_movies/fav
 import 'package:movie_app/features/movie/domain/entities/movie.dart';
 import 'package:movie_app/features/movie/presentation/widgets/movie_widget.dart';
 import 'package:movie_app/route/route_name.dart';
+import 'package:provider/provider.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -15,47 +16,141 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
+  late FocusNode _focus;
+  List<Movie>? movieList;
+  late TextEditingController _textEditingController;
+  String query = '';
+  SearchableMovieNotifier searchableMovieNotifier = SearchableMovieNotifier();
+
   @override
   void initState() {
     super.initState();
     // = Provider.of<FavoriteMoviesBloc>(context, listen: false);
+    _focus = FocusNode();
+    _textEditingController = TextEditingController();
+    _textEditingController.addListener(_onTextChanged);
     context.read<GetFavoriteMoviesBloc>().add(GetFavoriteMoviesEvent());
+  }
+
+  void _onTextChanged() {
+    String inputText = _textEditingController.text.trim();
+
+    if (query.compareTo(inputText) == 0) return;
+
+    query = inputText;
+    _filterMovies();
+  }
+
+  void _filterMovies() {
+    if (query.compareTo('') == 0) {
+      searchableMovieNotifier.update(movieList!);
+      return;
+    }
+
+    if (movieList != null) {
+      List<Movie> searchableMovieList = [];
+
+      movieList!.forEach((movie) {
+        String title = movie.title.toLowerCase();
+        if (title.contains(query)) {
+          searchableMovieList!.add(movie);
+        }
+      });
+
+      searchableMovieNotifier.update(searchableMovieList);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetFavoriteMoviesBloc, GetFavoriteMoviesState>(
-        builder: (context, state) {
-          debugPrint(state.toString());
-
-          if (state is GetFavoriteMoviesLoaded) {
-            return _buildFavoriteMoviesList(state.movieList.results);
-          } else if (state is GetFavoriteMoviesError) {
-            return Text('GetFavoriteMoviesError', style: TextStyle(color: Colors.white),);
-          } else {
-            return Text('hmm', style: TextStyle(color: Colors.white),);
-          }
-        }
+    return Scaffold(
+      body: Column(
+        children: [
+          Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+              height: 50,
+              child: TextField(
+                controller: _textEditingController,
+                textInputAction: TextInputAction.done,
+                onTapOutside: (pointerDownEvent) {
+                  _focus.unfocus();
+                },
+                textAlignVertical: TextAlignVertical.center,
+                focusNode: _focus,
+                style: const TextStyle(
+                    color: Colors.white
+                ),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: const Color(0xff292b37),
+                  contentPadding: EdgeInsets.zero,
+                  hintText: 'Search',
+                  hintStyle: const TextStyle(
+                      color: Colors.white54
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+          ),
+          BlocBuilder<GetFavoriteMoviesBloc, GetFavoriteMoviesState>(
+              builder: (context, state) {
+                if (state is GetFavoriteMoviesLoaded) {
+                  movieList = state.movieList.results;
+                  _filterMovies();
+                  return ChangeNotifierProvider<SearchableMovieNotifier>(
+                      create: (BuildContext context) => searchableMovieNotifier,
+                      child: Consumer<SearchableMovieNotifier>(
+                          builder: (BuildContext context, notifier, Widget? child) {
+                            return _buildFavoriteMoviesList(notifier.movieList);
+                          }
+                      ));
+                } else if (state is GetFavoriteMoviesError) {
+                  return const Text('GetFavoriteMoviesError', style: TextStyle(color: Colors.white),);
+                } else {
+                  return const Text('hmm', style: TextStyle(color: Colors.white),);
+                }
+              }
+          ),
+        ],
+      ),
     );
   }
 }
 
 Widget _buildFavoriteMoviesList(List<Movie> movieList) {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-    child: ListView.separated(
-        separatorBuilder: (BuildContext context, int index) => SizedBox(width: 0, height: 16,),
-        itemCount: movieList.length,
-        itemBuilder: (context, position) => MovieWidget(
-            movie: movieList[position],
-        onTap: (id) {
-              Navigator.pushNamed(context,
-                  RouteName.MOVIE_DETAILS,
-                  arguments: <String, int>{
-                    'movie_id': id
-                  }
-              );
-        },),
+  return Expanded(
+    child: Container(
+      margin: EdgeInsets.symmetric(horizontal: 12),
+      child: ListView.separated(
+          separatorBuilder: (BuildContext context, int index) => SizedBox(width: 0, height: 16,),
+          itemCount: movieList.length,
+          itemBuilder: (context, position) => MovieWidget(
+              movie: movieList[position],
+          onTap: (id) {
+                Navigator.pushNamed(context,
+                    RouteName.MOVIE_DETAILS,
+                    arguments: {'movie_id': id}
+                );
+          },),
+      ),
     ),
   );
+}
+
+class SearchableMovieNotifier extends ChangeNotifier {
+  List<Movie> movieList = [];
+
+  void update(List<Movie> movieList) {
+    this.movieList = movieList;
+    notifyListeners();
+  }
 }

@@ -63,4 +63,9 @@ void main() {
     final result = await accountApiClient.addFavoriteMovie(21460539, 'b93032188ec3132255e92a1247116f57e4a0a4c4', 533537);
     print(result);
   });
+
+  test('test search movie', () async {
+    final result = await client.searchMovies('one');
+    print(result?.total_results);
+  });
 }

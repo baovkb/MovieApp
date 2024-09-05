@@ -58,6 +58,12 @@ class MovieApiClient {
     return VideosListModel.fromJson(_handleResponse(response));
   }
 
+  Future<MovieListModel> searchMovies(String query) async {
+    final response = await client.get(Uri.parse(BASE_URL).resolve('search/movie?query=$query&api_key=$apiKey'));
+    debugPrint(response.request.toString());
+    return MovieListModel.fromJson(_handleResponse(response));
+  }
+
    Map<String, dynamic> _handleResponse(final http.Response response) {
     switch(response.statusCode) {
       case 200:

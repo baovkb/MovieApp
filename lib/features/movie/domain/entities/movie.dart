@@ -7,7 +7,7 @@ class Movie {
   String original_title;
   String overview;
   double popularity;
-  String poster_path;
+  String? poster_path;
   String release_date;
   String title;
   bool video;

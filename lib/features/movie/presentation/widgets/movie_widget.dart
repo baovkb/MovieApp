@@ -38,58 +38,61 @@ class MovieWidget extends StatelessWidget {
             height: 260,
             color: CustomColor.mainColor,
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  movie.title,
-                  softWrap: true,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18
-                  ),),
-                Text(movie.release_date,
-                  style: const TextStyle(
-                      color: Colors.white54
-                  ),),
-                Consumer<FetchMovieGenreState>(
-                    builder: (context, genreState, child) {
-                      if (genreState is FetchMovieGenreInitial) {
-                        return const Center(
-                          child: Text('Please wait...', style: TextStyle(color: Colors.white),),
-                        );
-                      } else if (genreState is FetchMovieGenreLoading) {
-                        return const Center(
-                            child: CircularProgressIndicator(color: Colors.white,));
-                      } else if (genreState is FetchMovieGenreLoaded) {
-                        return Container(
-                            margin: const EdgeInsets.symmetric(vertical: 12),
-                            child: GenreLabelWidget(genreList: genreState.genreList, genreIDList: movie.genre_ids));
-                      } else if (genreState is FetchMovieGenreError) {
-                        return const Center(child: Text('Something happened'),);
-                      } else {
-                        return const Center(child: Text('Unknown error'),);
-                      }
-                    }),
-                Row(
-                  children: [
-                    const Icon(Icons.star,
-                      color: Colors.yellow,),
-                    RichText(text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: movie.vote_average.toStringAsFixed(1)
-                          ),
-                          const TextSpan(
-                              text: '/10'
-                          )
-                        ]
-                    ))
-                  ],
-                )
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    movie.title,
+                    softWrap: true,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18
+                    ),),
+                  Text(movie.release_date,
+                    style: const TextStyle(
+                        color: Colors.white54
+                    ),),
+                  Consumer<FetchMovieGenreState>(
+                      builder: (context, genreState, child) {
+                        if (genreState is FetchMovieGenreInitial) {
+                          return const Center(
+                            child: Text('Please wait...', style: TextStyle(color: Colors.white),),
+                          );
+                        } else if (genreState is FetchMovieGenreLoading) {
+                          return const Center(
+                              child: CircularProgressIndicator(color: Colors.white,));
+                        } else if (genreState is FetchMovieGenreLoaded) {
+                          return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 12),
+                              child: GenreLabelWidget(genreList: genreState.genreList, genreIDList: movie.genre_ids));
+                        } else if (genreState is FetchMovieGenreError) {
+                          return const Center(child: Text('Something happened'),);
+                        } else {
+                          return const Center(child: Text('Unknown error'),);
+                        }
+                      }),
+                  Row(
+                    children: [
+                      const Icon(Icons.star,
+                        color: Colors.yellow,),
+                      RichText(text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: movie.vote_average.toStringAsFixed(1)
+                            ),
+                            const TextSpan(
+                                text: '/10'
+                            )
+                          ]
+                      ))
+                    ],
+                  )
+                ],
+              ),
             ),
           )
         ],
