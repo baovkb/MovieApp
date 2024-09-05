@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/features/account/presentation/bloc/favorite_movies/get_favorite_movies_bloc.dart';
@@ -20,7 +22,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   List<Movie>? movieList;
   late TextEditingController _textEditingController;
   String query = '';
-  SearchableMovieNotifier searchableMovieNotifier = SearchableMovieNotifier();
+  late SearchableMovieNotifier searchableMovieNotifier;
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -29,16 +32,34 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     _focus = FocusNode();
     _textEditingController = TextEditingController();
     _textEditingController.addListener(_onTextChanged);
+    searchableMovieNotifier = SearchableMovieNotifier();
     context.read<GetFavoriteMoviesBloc>().add(GetFavoriteMoviesEvent());
   }
 
+  @override
+  void dispose() {
+    _focus.dispose();
+    _textEditingController.removeListener(_onTextChanged);
+    _textEditingController.dispose();
+    searchableMovieNotifier.dispose();
+    if (_debounce!.isActive) {
+      _debounce?.cancel();
+    }
+    debugPrint('dispose favorite screen');
+    super.dispose();
+  }
+
   void _onTextChanged() {
-    String inputText = _textEditingController.text.trim();
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
 
-    if (query.compareTo(inputText) == 0) return;
+    _debounce = Timer(const Duration(milliseconds: 200), () {
+      String inputText = _textEditingController.text.trim();
 
-    query = inputText;
-    _filterMovies();
+      if (query.compareTo(inputText) == 0) return;
+
+      query = inputText;
+      _filterMovies();
+    });
   }
 
   void _filterMovies() {
@@ -64,63 +85,69 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
-              height: 50,
-              child: TextField(
-                controller: _textEditingController,
-                textInputAction: TextInputAction.done,
-                onTapOutside: (pointerDownEvent) {
-                  _focus.unfocus();
-                },
-                textAlignVertical: TextAlignVertical.center,
-                focusNode: _focus,
-                style: const TextStyle(
-                    color: Colors.white
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color(0xff292b37),
-                  contentPadding: EdgeInsets.zero,
-                  hintText: 'Search',
-                  hintStyle: const TextStyle(
-                      color: Colors.white54
+      body: ChangeNotifierProvider<SearchableMovieNotifier>(
+        create: (BuildContext context) => searchableMovieNotifier,
+        child: Column(
+          children: [
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+                height: 50,
+                child: TextField(
+                  controller: _textEditingController,
+                  textInputAction: TextInputAction.done,
+                  onTapOutside: (pointerDownEvent) {
+                    _focus.unfocus();
+                  },
+                  textAlignVertical: TextAlignVertical.center,
+                  focusNode: _focus,
+                  style: const TextStyle(
+                      color: Colors.white
                   ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide.none
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: const Color(0xff292b37),
+                    contentPadding: EdgeInsets.zero,
+                    hintText: 'Search',
+                    hintStyle: const TextStyle(
+                        color: Colors.white54
+                    ),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      size: 30,
+                      color: Colors.white,
+                    ),
                   ),
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                ),
-              )
-          ),
-          BlocBuilder<GetFavoriteMoviesBloc, GetFavoriteMoviesState>(
-              builder: (context, state) {
+                )
+            ),
+            BlocConsumer<GetFavoriteMoviesBloc, GetFavoriteMoviesState>(
+              listener: (context, state) {
                 if (state is GetFavoriteMoviesLoaded) {
                   movieList = state.movieList.results;
                   _filterMovies();
-                  return ChangeNotifierProvider<SearchableMovieNotifier>(
-                      create: (BuildContext context) => searchableMovieNotifier,
-                      child: Consumer<SearchableMovieNotifier>(
-                          builder: (BuildContext context, notifier, Widget? child) {
-                            return _buildFavoriteMoviesList(notifier.movieList);
-                          }
-                      ));
-                } else if (state is GetFavoriteMoviesError) {
-                  return const Text('GetFavoriteMoviesError', style: TextStyle(color: Colors.white),);
-                } else {
-                  return const Text('hmm', style: TextStyle(color: Colors.white),);
                 }
-              }
-          ),
-        ],
+              },
+                builder: (context, state) {
+                  if (state is GetFavoriteMoviesLoaded) {
+                    return SizedBox();
+                  } else if (state is GetFavoriteMoviesError) {
+                    return const Text('GetFavoriteMoviesError', style: TextStyle(color: Colors.white),);
+                  } else {
+                    return const Text('hmm', style: TextStyle(color: Colors.white),);
+                  }
+                }
+            ),
+            Consumer<SearchableMovieNotifier>(
+                builder: (BuildContext context, notifier, Widget? child) {
+                  return _buildFavoriteMoviesList(notifier.movieList);
+                }
+            )
+          ],
+        ),
       ),
     );
   }
