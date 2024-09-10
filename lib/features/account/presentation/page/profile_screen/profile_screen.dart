@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:movie_app/core/utils/colors.dart';
+import 'package:movie_app/core/utils/theme.dart';
 import 'package:movie_app/features/account/data/repositories/account_repository_impl.dart';
 import 'package:movie_app/features/account/data/sources/local_data/account_db.dart';
 import 'package:movie_app/features/account/data/sources/remote_data/account_api_client.dart';
@@ -56,11 +57,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = context.read<ThemeProvider>();
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: BlocConsumer<GetAccountBloc, GetAccountState>(
           builder: (context, getAccountState) {
-            debugPrint(getAccountState.toString());
-
             if (getAccountState is GetAccountInitial || getAccountState is GetAccountLoading) {
               return const Center(
                 child: CircularProgressIndicator(color: Colors.white,),);
@@ -93,26 +95,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         margin: EdgeInsets.only(top: 16),
                         child: Text(
                           account.name.isEmpty ? '(No name)' : account.name,
-                          style: TextStyle(color: CustomColor.textColor,
-                              fontSize: 18),),
+                          style: TextStyle(fontSize: 18),),
                       ),
                       Container(
                         margin: EdgeInsets.only(top: 16),
-                        child: RichText(text: TextSpan(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
                             children: [
-                              TextSpan(text: 'Username: ', style: TextStyle(color: CustomColor.textColor,
-                                  fontSize: 18)),
-                              TextSpan(text: account.username, style: TextStyle(color: CustomColor.textColor,
-                                  fontSize: 18))
+                              const Text('Username: ', style: TextStyle(fontSize: 18)),
+                              Text(account.username, style: TextStyle(fontSize: 18))
                             ]
-                        )),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: colorScheme.secondary,
+                          borderRadius: BorderRadius.circular(12)
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.dark_mode),
+                             Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 8),
+                                    child: Text('Dark mode', style: TextStyle(fontWeight: FontWeight.bold),))),
+                            Switch(
+                                activeColor: colorScheme.onSurface,
+                                value: themeMode.mode == ThemeMode.dark,
+                                onChanged: (enable) {
+                                  themeMode.toggleMode();
+                                }),
+                          ],
+                        ),
                       )
                     ],
                   ),
                   const Positioned(
                     top: 10,
                     right: 10,
-                    child: Icon(Icons.settings, color: Colors.white,),
+                    child: Icon(Icons.settings),
                   )
                 ] 
               );
@@ -125,7 +149,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 requestTokenSub = requestTokenBloc.stream.listen((requestTokenState) {
                   if (requestTokenState is RequestTokenLoaded) {
                     String token = (requestTokenState).token;
-
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ApproveTokenScreen(token: token)))
                         .then((accept) {
                       if (accept) {

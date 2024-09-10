@@ -18,14 +18,14 @@ class PopularMoviesWidget extends StatelessWidget {
             children: [
               Text('Popular movies',
                 style: TextStyle(
-                    color: Colors.white,
+                    // color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold
                 ),
               ),
               Text('See all',
                 style: TextStyle(
-                    color: Colors.white54,
+                    // color: Colors.white54,
                     fontSize: 16
                 ),)
             ],
@@ -39,11 +39,9 @@ class PopularMoviesWidget extends StatelessWidget {
 
                 if (movieState is FetchPopularMoviesInitial) {
                   return const Center(child:
-                      Text('Please wait...',
-                        style: TextStyle(color: Colors.white),),);
+                      Text('Please wait...',),);
                 } else if (movieState is FetchPopularMoviesLoading) {
                   return const Center(child: CircularProgressIndicator(
-                    color: Colors.white,
                   ));
                 } else if (movieState is FetchPopularMoviesLoaded) {
                   return PageView.builder(

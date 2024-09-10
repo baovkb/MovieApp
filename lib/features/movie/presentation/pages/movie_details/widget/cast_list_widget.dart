@@ -85,7 +85,6 @@ class _CastListWidgetState extends State<CastListWidget> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: CustomColor.mainLightColor,
                       width: 1
                     ),
                     image: DecorationImage(
@@ -93,7 +92,7 @@ class _CastListWidgetState extends State<CastListWidget> {
                         fit: BoxFit.cover),
                   ),
                 ),
-                Text(cast.name, style: TextStyle(color: Colors.white),)
+                Text(cast.name)
               ]
             ),
           ); 

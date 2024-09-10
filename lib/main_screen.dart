@@ -22,6 +22,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -31,7 +33,8 @@ class _MainScreenState extends State<MainScreen> {
             children: navPageList,
           ),
           CustomNavigationBar(
-              backgroundColor: CustomColor.mainLightColor,
+              backgroundColor: colorScheme.secondary,
+              selectedColor: colorScheme.onSurface,
               onTap: (index) {
                 setState(() {
                   _current_page = index;
@@ -40,13 +43,13 @@ class _MainScreenState extends State<MainScreen> {
               navItemList: [
                 CustomNavigationBarItem(
                     icon: Icons.home,
-                    label: const Text('Home', style: TextStyle(color: Colors.white),)),
+                    label: Text('Home', style: TextStyle(color: colorScheme.onSurface),)),
                 CustomNavigationBarItem(
                     icon: Icons.favorite,
-                    label: const Text('Favorite', style: TextStyle(color: Colors.white),)),
+                    label: Text('Favorite', style: TextStyle(color: colorScheme.onSurface),)),
                 CustomNavigationBarItem(
                     icon: Icons.account_box,
-                    label: Text('Profile', style: TextStyle(color: Colors.white))),
+                    label: Text('Profile', style: TextStyle(color: colorScheme.onSurface))),
               ])
         ],
       ),

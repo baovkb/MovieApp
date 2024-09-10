@@ -61,6 +61,8 @@ class _SearchMoviesScreenState extends State<SearchMoviesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return StreamProvider<SearchMoviesState>(
       create: (BuildContext context) =>_searchMoviesController.stream,
       initialData: SearchMoviesInitial(),
@@ -74,6 +76,7 @@ class _SearchMoviesScreenState extends State<SearchMoviesScreen> {
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   height: 50,
                   child: TextField(
+                    cursorColor: colorScheme.onSurface,
                     textInputAction: TextInputAction.search,
                     controller: _controller,
                     onTapOutside: (pointerDownEvent) {
@@ -81,16 +84,13 @@ class _SearchMoviesScreenState extends State<SearchMoviesScreen> {
                     },
                     textAlignVertical: TextAlignVertical.center,
                     focusNode: _focus,
-                    style: const TextStyle(
-                        color: Colors.white
-                    ),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: const Color(0xff292b37),
+                      fillColor: colorScheme.secondary,
                       contentPadding: EdgeInsets.zero,
                       hintText: 'Search',
-                      hintStyle: const TextStyle(
-                          color: Colors.white54
+                      hintStyle: TextStyle(
+                          color: colorScheme.onSurface.withOpacity(0.5)
                       ),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -101,7 +101,6 @@ class _SearchMoviesScreenState extends State<SearchMoviesScreen> {
                         child: const Icon(
                           Icons.arrow_back,
                           size: 30,
-                          color: Colors.white,
                         ),
                       ),
                     ),

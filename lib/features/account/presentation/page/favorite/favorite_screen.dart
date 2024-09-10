@@ -83,6 +83,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: ChangeNotifierProvider<SearchableMovieNotifier>(
         create: (BuildContext context) => searchableMovieNotifier,
@@ -93,6 +95,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
                 height: 50,
                 child: TextField(
+                  cursorColor: colorScheme.onSurface,
                   controller: _textEditingController,
                   textInputAction: TextInputAction.done,
                   onTapOutside: (pointerDownEvent) {
@@ -100,16 +103,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   },
                   textAlignVertical: TextAlignVertical.center,
                   focusNode: _focus,
-                  style: const TextStyle(
-                      color: Colors.white
-                  ),
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: const Color(0xff292b37),
+                    fillColor: colorScheme.secondary,
                     contentPadding: EdgeInsets.zero,
                     hintText: 'Search',
-                    hintStyle: const TextStyle(
-                        color: Colors.white54
+                    hintStyle:  TextStyle(
+                        color: colorScheme.onSurface.withOpacity(0.5)
                     ),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -118,7 +118,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     prefixIcon: const Icon(
                       Icons.search,
                       size: 30,
-                      color: Colors.white,
                     ),
                   ),
                 )

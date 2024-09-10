@@ -9,6 +9,7 @@ class GenreLabelWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> genreLabelList = [];
+    final colorScheme = Theme.of(context).colorScheme;
 
     for (final genreID in genreIDList) {
       for (final genre in genreList) {
@@ -19,11 +20,11 @@ class GenreLabelWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       border: Border.all(
-                          color: Colors.white54,
+                          color: colorScheme.onSurface.withOpacity(0.5),
                           width: 1
                       )
                   ),
-                  child: Text(genre.name, style: TextStyle(color: Colors.white54),)
+                  child: Text(genre.name,)
               )
           );
           break;

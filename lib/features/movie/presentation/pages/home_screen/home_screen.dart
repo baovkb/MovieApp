@@ -28,20 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //use for bloc
-    // BlocProvider.of<MovieBloc>(context).add(FetchPopularMovieEvent());
-    // context.read<MovieBloc>().add(FetchPopularMovieEvent());
-
-    //use for stream provider
-    // final movieState = context.watch<MovieState>();
-    //nếu dùng context.watch thì sẽ build lại toàn bộ ui trong hàm build (tức là hàm này)
-    //nếu dùng context.read thì chỉ lấy giá trị hiện tại mà không listen provider
-    //nếu dùng consumer thì chỉ update lại ui trong hàm build của consumer mỗi khi data của provider đó thay đổi
-
-    /*
-      StreamProvider sẽ thông báo tất cả widget con đã subscribe provider đó, nên dùng cho nhiều widget cùng listen một stream
-      StreamBuilder nên dùng cho một widget cụ thể muốn listen một stream
-     */
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -62,16 +49,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Hello there',
                           style: TextStyle(
-                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 28
                           ),
                         ),
-                        Text(
-                          'What to watch?',
-                          style: TextStyle(
-                              color: Colors.white54
-                          ),)
+                        Text('What to watch?')
                       ],
                     ),
                     Container(
@@ -94,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   height: 50,
                   child: TextField(
+                    cursorColor: colorScheme.onSurface,
                     textInputAction: TextInputAction.go,
                     onTapOutside: (pointerDownEvent) {
                       _focus.unfocus();
@@ -109,16 +92,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     textAlignVertical: TextAlignVertical.center,
                     focusNode: _focus,
-                    style: const TextStyle(
-                        color: Colors.white
-                    ),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: const Color(0xff292b37),
+                      fillColor: colorScheme.secondary,
                       contentPadding: EdgeInsets.zero,
                       hintText: 'Search',
-                      hintStyle: const TextStyle(
-                          color: Colors.white54
+                      hintStyle: TextStyle(
+                          color: colorScheme.onSurface.withOpacity(0.5)
                       ),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -127,15 +107,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       prefixIcon: const Icon(
                         Icons.search,
                         size: 30,
-                        color: Colors.white,
                       ),
                     ),
                   )
               ),
               Container(
                 margin: const EdgeInsets.only(top: 12),
-                child: const Divider(
-                  color: Colors.white24,
+                child: Divider(
+                  color: colorScheme.onSurface.withOpacity(0.2),
                   thickness: 1,
                   indent: 16,
                   endIndent: 16,

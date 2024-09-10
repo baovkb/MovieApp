@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/core/utils/colors.dart';
+import 'package:movie_app/core/utils/theme.dart';
 import 'package:movie_app/features/account/data/repositories/account_repository_impl.dart';
 import 'package:movie_app/features/account/data/sources/local_data/account_db.dart';
 import 'package:movie_app/features/account/data/sources/remote_data/account_api_client.dart';
@@ -75,6 +76,8 @@ class _MyAppState extends State<MyApp> {
     return 
       MultiProvider(
         providers: [
+          ChangeNotifierProvider<ThemeProvider>(
+              create: (context) => ThemeProvider()),
           StreamProvider<FetchPopularMoviesState>(
               create: (context) => fetchPopularMoviesController.stream,
               initialData: FetchPopularMoviesInitial()
@@ -91,13 +94,23 @@ class _MyAppState extends State<MyApp> {
             create: (BuildContext context) => AddFavoriteMovieBloc(addFavoriteMovieUseCase),
           )
         ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            scaffoldBackgroundColor: CustomColor.mainColor
-          ),
-          initialRoute: RouteName.MAIN_PAGE,
-          onGenerateRoute: RouteGenerator.generateRoute,
+        child: Consumer<ThemeProvider>(
+          builder: (BuildContext context, ThemeProvider theme, Widget? child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              themeMode: theme.mode,
+              theme: ThemeData(
+                  useMaterial3: true,
+                  colorScheme: CustomColor.lightColorScheme,
+              ),
+              darkTheme: ThemeData(
+                useMaterial3: true,
+                colorScheme: CustomColor.darkColorScheme,
+              ),
+              initialRoute: RouteName.MAIN_PAGE,
+              onGenerateRoute: RouteGenerator.generateRoute,
+            );
+          },
         ),
       );
   }

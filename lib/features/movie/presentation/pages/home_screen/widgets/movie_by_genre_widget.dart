@@ -23,9 +23,9 @@ class MovieByGenreWidget extends StatelessWidget {
       builder: (context, movieGenreState, child) {
         if (movieGenreState is FetchMovieGenreInitial) {
           return const Center(child:
-            Text('Please wait...', style: TextStyle(color: Colors.white),),);
+            Text('Please wait...'));
         } else if (movieGenreState is FetchMovieGenreLoading) {
-          return const Center(child: CircularProgressIndicator(color: Colors.white,),
+          return const Center(child: CircularProgressIndicator(),
           );
         } else if (movieGenreState is FetchMovieGenreLoaded) {
           return _BuildMoviesByGenreWidget(genreList: movieGenreState.genreList,);
@@ -67,23 +67,23 @@ class _BuildMoviesByGenreWidgetState extends State<_BuildMoviesByGenreWidget> wi
   @override
   Widget build(BuildContext context) {
     final genreList = widget.genreList;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       height: 380,
       child: Scaffold(
-        backgroundColor: CustomColor.mainColor,
+        // backgroundColor: CustomColor.mainColor,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(30),
           child: AppBar(
-            backgroundColor: CustomColor.mainColor,
             bottom: TabBar(
                 dividerHeight: 0,
                 indicatorSize: TabBarIndicatorSize.label,
                 indicator: BoxDecoration(),
                 controller: _tabController,
-                indicatorColor: Colors.white,
-                unselectedLabelColor: Colors.white38,
-                labelColor: Colors.white,
+                indicatorColor: colorScheme.onSurface,
+                unselectedLabelColor: colorScheme.onSurface.withOpacity(0.55),
+                labelColor: colorScheme.onSurface,
                 isScrollable: true,
                 labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 tabs: genreList.map((genre) => Text(genre.name)).toList()
@@ -123,9 +123,9 @@ class _GenreMovie extends StatelessWidget {
           if (snapshot.hasData) {
             if (snapshot.data is FetchMoviesByGenreInitial) {
               return const Center(child:
-              Text('Please wait...', style: TextStyle(color: Colors.white),),);
+              Text('Please wait...',),);
             } else if (snapshot.data is FetchMoviesByGenreLoading) {
-              return const Center(child: CircularProgressIndicator(color: Colors.white,));
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.data is FetchMoviesByGenreLoaded) {
               MovieList movieList = (snapshot.data as FetchMoviesByGenreLoaded).movieList;
 
@@ -142,12 +142,12 @@ class _GenreMovie extends StatelessWidget {
                             })
                       },));
             } else if (snapshot.data is FetchMoviesByGenreError) {
-              return const Center(child: Text('Something happened', style: TextStyle(color: Colors.white)),);
+              return const Center(child: Text('Something happened'),);
             } else {
-              return const Center(child: Text('Unknown error', style: TextStyle(color: Colors.white)),);
+              return const Center(child: Text('Unknown error'),);
             }
           } else {
-            return const Center(child: Text('Unknown error', style: TextStyle(color: Colors.white)),);
+            return const Center(child: Text('Unknown error'),);
           }
         });
   }

@@ -125,16 +125,16 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 220,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [
-                        CustomColor.mainColor.withOpacity(0.8),
-                        CustomColor.mainColor.withOpacity(0.0)
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      ),
-                ),
+                // decoration: BoxDecoration(
+                //   gradient: LinearGradient(
+                //       colors: [
+                //         CustomColor.mainColor.withOpacity(0.8),
+                //         CustomColor.mainColor.withOpacity(0.0)
+                //       ],
+                //       begin: Alignment.topCenter,
+                //       end: Alignment.bottomCenter,
+                //       ),
+                // ),
               ),
               Align(
                 child: GestureDetector(
@@ -142,11 +142,11 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: CustomColor.secondColor
+                      // color: CustomColor.secondColor
                     ),
                     child: const Icon(
-                      Icons.play_arrow,
                       color: Colors.white,
+                      Icons.play_arrow,
                       size: 40,),
                   ),
                 ),
@@ -156,10 +156,10 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   left: 20,
                   child: GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: Icon(
+                    child: const Icon(
+                      color: Colors.white,
                       Icons.keyboard_arrow_left_sharp,
                       size: 30,
-                      color: Colors.white,
                     ),
                   )),
               PopupMenu(),
@@ -170,7 +170,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
           margin: EdgeInsets.symmetric(horizontal: 18, vertical: 10),
           child: Text('${movie.title}',
             style: TextStyle(
-              color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 20),),
         ),
@@ -178,22 +177,22 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
           margin: EdgeInsets.symmetric(horizontal: 18, vertical: 6),
           child: Row(
             children: [
-              RichText(text: TextSpan(
+              Row(
                 children: [
-                  TextSpan(text: '${movie.vote_average.toStringAsFixed(1)}', style: TextStyle(color: Colors.white)),
-                  TextSpan(text: '/10', style: TextStyle(color: Colors.white))
+                  Text('${movie.vote_average.toStringAsFixed(1)}'),
+                  Text('/10')
                 ]
-              )),
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: RatingBar.readOnly(
                   maxRating: 10,
                   size: 14,
-                  filledColor: CustomColor.secondColor,
+                  // filledColor: CustomColor.secondColor,
                   filledIcon: Icons.star,
                   emptyIcon: Icons.star_border_outlined,
                   halfFilledIcon: Icons.star_half,
-                  halfFilledColor: CustomColor.secondColor,
+                  // halfFilledColor: CustomColor.secondColor,
                   initialRating: movie.vote_average,),
               ),
             ],
@@ -202,12 +201,11 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         Container(
           margin: EdgeInsets.symmetric(horizontal: 18, vertical: 16),
           child: Text('OVERVIEW', style: TextStyle(
-              color: CustomColor.lightTextColor,
               fontWeight: FontWeight.w500),),
         ),
         Container(
           margin: EdgeInsets.symmetric(horizontal: 18),
-          child: Text('${movie.overview}', style: TextStyle(color: CustomColor.textColor),),
+          child: Text('${movie.overview}'),
         ),
         Container(
           margin: EdgeInsets.symmetric(horizontal: 18, vertical: 16),
@@ -217,10 +215,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('BUDGET', style: TextStyle(
-                      color: CustomColor.textColor,
                       fontWeight: FontWeight.w500),),
                   Text('${movie.budget}\$', style: TextStyle(
-                      color: CustomColor.secondColor,
                       fontWeight: FontWeight.w500
                   ),)
                 ],
@@ -228,10 +224,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               Expanded(child: Column(
                 children: [
                   Text('DURATION', style: TextStyle(
-                      color: CustomColor.textColor,
                       fontWeight: FontWeight.w500),),
                   Text('${movie.runtime}min', style: TextStyle(
-                      color: CustomColor.secondColor,
                       fontWeight: FontWeight.w500
                   ),)
                 ],
@@ -240,10 +234,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text('RELEASE DATE', style: TextStyle(
-                      color: CustomColor.textColor,
                       fontWeight: FontWeight.w500),),
                   Text('${movie.release_date}', style: TextStyle(
-                      color: CustomColor.secondColor,
                       fontWeight: FontWeight.w500
                   ),)
                 ],
@@ -254,7 +246,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         Container(
           margin: EdgeInsets.only(left: 18, right: 18, top: 8, bottom: 18),
           child: Text('GENRES', style: TextStyle(
-              color: CustomColor.lightTextColor,
               fontWeight: FontWeight.w500),),
         ),
         Container(
@@ -267,8 +258,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                       genreIDList: movie.genres.map((genre) => genre.id).toList());
                 } else {
                   return const Center(
-                    child: Text('Please wait...',
-                      style: TextStyle(color: Colors.white),),
+                    child: Text('Please wait...',),
                   );
                 }
               }),
@@ -276,7 +266,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         Container(
           margin: EdgeInsets.symmetric(horizontal: 18, vertical: 18),
           child: Text('CAST', style: TextStyle(
-              color: CustomColor.lightTextColor,
               fontWeight: FontWeight.w500),),
         ),
         Container(
@@ -287,7 +276,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         Container(
           margin: EdgeInsets.only(left: 18, right: 18, top: 24),
           child: Text('SIMILAR MOVIE', style: TextStyle(
-              color: CustomColor.lightTextColor,
               fontWeight: FontWeight.w500),),
         ),
         Container(
@@ -398,8 +386,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         top: 10,
         right: 10,
         child: PopupMenuButton(
-          icon: Icon(Icons.more_vert, color: Colors.white,),
-          color: CustomColor.mainColor,
+          icon: const Icon(Icons.more_vert, color: Colors.white,),
             itemBuilder: (context) => [
               PopupMenuItem(
                   onTap: () {
@@ -432,14 +419,14 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
 
                           if (!isExist) {
                             return const Row(children: [
-                                Icon(Icons.favorite_border, color: Colors.white,),
-                                Text('Add to favorite', style: TextStyle(color: Colors.white),)
+                                Icon(Icons.favorite_border),
+                                Text('Add to favorite')
                               ],
                             );
                           } else {
                             return const Row(children: [
                               Icon(Icons.favorite, color: Colors.pinkAccent,),
-                              Text('Remove from favorite', style: TextStyle(color: Colors.white),)
+                              Text('Remove from favorite')
                               ],
                             );
                           }

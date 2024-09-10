@@ -36,7 +36,7 @@ class MovieWidget extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width - 200,
             height: 260,
-            color: CustomColor.mainColor,
+            // color: CustomColor.primaryColor,
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -48,23 +48,21 @@ class MovieWidget extends StatelessWidget {
                     movie.title,
                     softWrap: true,
                     style: const TextStyle(
-                        color: Colors.white,
                         fontWeight: FontWeight.w400,
                         fontSize: 18
                     ),),
                   Text(movie.release_date,
                     style: const TextStyle(
-                        color: Colors.white54
                     ),),
                   Consumer<FetchMovieGenreState>(
                       builder: (context, genreState, child) {
                         if (genreState is FetchMovieGenreInitial) {
                           return const Center(
-                            child: Text('Please wait...', style: TextStyle(color: Colors.white),),
+                            child: Text('Please wait...',),
                           );
                         } else if (genreState is FetchMovieGenreLoading) {
                           return const Center(
-                              child: CircularProgressIndicator(color: Colors.white,));
+                              child: CircularProgressIndicator());
                         } else if (genreState is FetchMovieGenreLoaded) {
                           return Container(
                               margin: const EdgeInsets.symmetric(vertical: 12),
@@ -79,16 +77,8 @@ class MovieWidget extends StatelessWidget {
                     children: [
                       const Icon(Icons.star,
                         color: Colors.yellow,),
-                      RichText(text: TextSpan(
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: movie.vote_average.toStringAsFixed(1)
-                            ),
-                            const TextSpan(
-                                text: '/10'
-                            )
-                          ]
-                      ))
+                      Text(movie.vote_average.toStringAsFixed(1)),
+                      Text('/10'),
                     ],
                   )
                 ],
